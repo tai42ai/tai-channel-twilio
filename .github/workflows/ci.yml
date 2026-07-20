@@ -24,6 +24,11 @@ jobs:
           path: tai-channel-twilio
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
+          repository: ${{ github.repository_owner }}/tai-contract
+          path: tai-contract
+          token: ${{ secrets.TAI_CI_TOKEN }}
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
           repository: ${{ github.repository_owner }}/tai-kit
           path: tai-kit
           token: ${{ secrets.TAI_CI_TOKEN }}
