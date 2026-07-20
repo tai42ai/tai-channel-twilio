@@ -1,17 +1,17 @@
 """Import-graph guard for the shipped package.
 
 Two complementary walks assert the same rule: every import root reachable from
-``tai_channel_twilio`` is on the allowlist. The rule (see the README): the shipped
+``tai42_channel_twilio`` is on the allowlist. The rule (see the README): the shipped
 package imports
 the HTTP surface (httpx + starlette), the shared platform substrate
-(tai-contract + tai-kit with the redis extra, pydantic, pydantic-settings)
+(tai42-contract + tai42-kit with the redis extra, pydantic, pydantic-settings)
 and their dependency closure ONLY, plus the Python standard library. Anything
 else -- a package that is not a declared dependency of the shipped wheel -- is
 absent from the allowlist and fails the test loudly.
 
-The runtime walk imports ``tai_channel_twilio`` and every submodule in a fresh
+The runtime walk imports ``tai42_channel_twilio`` and every submodule in a fresh
 subprocess, then inspects ``sys.modules``. Running it in a subprocess that
-imports ONLY ``tai_channel_twilio`` means the assertion covers the SHIPPED package's
+imports ONLY ``tai42_channel_twilio`` means the assertion covers the SHIPPED package's
 true import closure and never observes roots that a sibling test module or a
 conftest pulled into this process's global ``sys.modules``. A submodule that
 fails to import raises loudly and fails the test too.
@@ -31,10 +31,10 @@ import sys
 from pathlib import Path
 
 # The shipped package and the public first-party packages it may import.
-PACKAGE = "tai_channel_twilio"
-ALLOWED_FIRST_PARTY = frozenset({PACKAGE, "tai_contract", "tai_kit"})
+PACKAGE = "tai42_channel_twilio"
+ALLOWED_FIRST_PARTY = frozenset({PACKAGE, "tai42_contract", "tai42_kit"})
 
-# Every third-party root the shipped ``tai_channel_twilio`` graph pulls in -- the
+# Every third-party root the shipped ``tai42_channel_twilio`` graph pulls in -- the
 # declared runtime dependencies plus their resolved closure. Compiled extension
 # modules appear under the bare top-level name they register (``_cffi_backend`` is
 # the C extension of the ``cffi`` distribution; ``_openssl`` is registered
@@ -90,8 +90,8 @@ def _allowed(root: str) -> bool:
     )
 
 
-# Program run in the subprocess: bind a stub app to the ``tai_app`` handle (the
-# plugin modules register through ``tai_app`` at import time, so the handle must
+# Program run in the subprocess: bind a stub app to the ``tai42_app`` handle (the
+# plugin modules register through ``tai42_app`` at import time, so the handle must
 # be bound first, exactly as the host binds it before importing the plugin),
 # import the package and every submodule, then print each imported root that is
 # NOT on the allowlist. A submodule that fails to import propagates as an
@@ -102,7 +102,7 @@ import importlib
 import pkgutil
 import sys
 
-from tai_contract.app import tai_app
+from tai42_contract.app import tai42_app
 
 PACKAGE = {PACKAGE!r}
 ALLOWED_FIRST_PARTY = {set(ALLOWED_FIRST_PARTY)!r}
@@ -141,7 +141,7 @@ class _StubApp:
         return _StubApp()
 
 
-tai_app.bind(_StubApp())
+tai42_app.bind(_StubApp())
 
 package = importlib.import_module(PACKAGE)
 for module_info in pkgutil.walk_packages(package.__path__, prefix=package.__name__ + "."):
@@ -194,13 +194,13 @@ def test_shipped_package_imports_only_allowlisted_roots() -> None:
         text=True,
     )
     assert result.returncode == 0, (
-        f"importing the shipped tai_channel_twilio graph failed:\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}"
+        f"importing the shipped tai42_channel_twilio graph failed:\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}"
     )
 
     offenders = [line for line in result.stdout.splitlines() if line]
-    assert offenders == [], f"non-allowlisted roots in the tai_channel_twilio module graph: {offenders}"
+    assert offenders == [], f"non-allowlisted roots in the tai42_channel_twilio module graph: {offenders}"
 
 
 def test_shipped_sources_name_only_allowlisted_roots() -> None:
     offenders = {root: sorted(files) for root, files in _static_import_roots().items() if not _allowed(root)}
-    assert offenders == {}, f"non-allowlisted import roots in the tai_channel_twilio sources: {offenders}"
+    assert offenders == {}, f"non-allowlisted import roots in the tai42_channel_twilio sources: {offenders}"

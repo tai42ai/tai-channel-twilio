@@ -1,4 +1,4 @@
-# tai-channel-twilio
+# tai42-channel-twilio
 
 [![CI](https://github.com/tai42ai/tai-channel-twilio/actions/workflows/ci.yml/badge.svg)](https://github.com/tai42ai/tai-channel-twilio/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
@@ -7,7 +7,7 @@ A Twilio SMS/WhatsApp **channel** plugin for the TAI ecosystem. It delivers an
 `ask_user` question to a human's phone through the Twilio Messages API and
 bridges the human's reply back into the interactions store — so an agent can
 reach a person out-of-band instead of only showing the question in the Studio
-inbox. It implements the `tai_contract.channels.Channel` protocol and registers
+inbox. It implements the `tai42_contract.channels.Channel` protocol and registers
 under the name `"twilio"`.
 
 ## The TAI ecosystem
@@ -24,9 +24,9 @@ covers the platform-level story:
 - Build a channel plugin (author guide): https://tai42.ai/guides/authors/channel
 - Ecosystem catalog: https://tai42.ai/reference/catalog
 
-Its only tai-* dependencies are `tai-contract` (the `Channel` protocol,
-`ChannelDelivery`, `ChannelDeliveryError`, and the `tai_app` handle) and
-`tai-kit[redis]` (`HttpxClient`, `RedisClient`, `TaiBaseSettings`, and the
+Its only tai-* dependencies are `tai42-contract` (the `Channel` protocol,
+`ChannelDelivery`, `ChannelDeliveryError`, and the `tai42_app` handle) and
+`tai42-kit[redis]` (`HttpxClient`, `RedisClient`, `TaiBaseSettings`, and the
 settings cache). Beyond those it depends on `httpx`, `starlette`, and
 `pydantic` / `pydantic-settings`. There is **no Twilio SDK**: the send is one Basic-auth form POST over
 `httpx`, and webhook signature validation is ~30 lines of stdlib
@@ -35,13 +35,13 @@ settings cache). Beyond those it depends on `httpx`, `starlette`, and
 ## Install
 
 Requires **Python 3.13+**. Nothing is on PyPI yet, so install from source — clone
-this repo alongside your `tai-skeleton` checkout and add it as an editable
+this repo alongside your `tai42-skeleton` checkout and add it as an editable
 dependency of the environment that runs the server:
 
 ```bash
 git clone https://github.com/tai42ai/tai-channel-twilio
 cd tai-skeleton   # or your own app checkout
-uv add --editable ../tai-channel-twilio   # once published: uv add tai-channel-twilio
+uv add --editable ../tai-channel-twilio   # once published: uv add tai42-channel-twilio
 ```
 
 ## Discovery
@@ -49,14 +49,14 @@ uv add --editable ../tai-channel-twilio   # once published: uv add tai-channel-t
 The runtime discovers this plugin through the manifest's `channel_modules` key:
 
 ```yaml
-channel_modules: ["tai_channel_twilio"]
+channel_modules: ["tai42_channel_twilio"]
 ```
 
 At app load the runtime imports every module under the package, and
 `register.py` fires the registrations as its import side-effect: the `"twilio"`
-channel on `tai_app.channels`, and — via the `inbound` import — the
-unauthenticated webhook route on `tai_app.http`. A bare
-`import tai_channel_twilio` registers **nothing** — the package is library-safe;
+channel on `tai42_app.channels`, and — via the `inbound` import — the
+unauthenticated webhook route on `tai42_app.http`. A bare
+`import tai42_channel_twilio` registers **nothing** — the package is library-safe;
 only the register module carries the side-effect.
 
 ## Configuration

@@ -7,10 +7,10 @@ from datetime import UTC, datetime, timedelta
 
 import httpx
 import pytest
-from tai_contract.channels import ChannelDeliveryError, ChannelNotification
+from tai42_contract.channels import ChannelDeliveryError, ChannelNotification
 
-from tai_channel_twilio.channel import TwilioChannel
-from tai_channel_twilio.correlation import PendingQuestionExistsError
+from tai42_channel_twilio.channel import TwilioChannel
+from tai42_channel_twilio.correlation import PendingQuestionExistsError
 from tests.conftest import FakeHttpx, FakeRedis, make_delivery, response
 
 pytestmark = pytest.mark.usefixtures("twilio_env")
@@ -41,7 +41,7 @@ async def test_messages_url_derives_from_api_base_url(
 ):
     # An overridden CHANNEL_TWILIO_API_BASE_URL (a stub origin in e2e) is where
     # the Messages endpoint is addressed — the send URL derives from the setting.
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     monkeypatch.setenv("CHANNEL_TWILIO_API_BASE_URL", "http://127.0.0.1:9098")
     reset_all_settings()
@@ -149,7 +149,7 @@ async def test_unlisted_recipient_rejected_and_nothing_sent(fake_redis: FakeRedi
 async def test_json_allowlist_padded_entry_matches_unpadded_recipient(
     fake_redis: FakeRedis, fake_httpx: FakeHttpx, monkeypatch: pytest.MonkeyPatch
 ):
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     monkeypatch.setenv("CHANNEL_TWILIO_ALLOWED_RECIPIENTS", '[" +15550000003 ", ""]')
     reset_all_settings()
@@ -163,7 +163,7 @@ async def test_json_allowlist_padded_entry_matches_unpadded_recipient(
 async def test_empty_allowlist_rejects_any_requested_recipient(
     fake_redis: FakeRedis, fake_httpx: FakeHttpx, monkeypatch: pytest.MonkeyPatch
 ):
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     monkeypatch.delenv("CHANNEL_TWILIO_ALLOWED_RECIPIENTS")
     reset_all_settings()
@@ -178,7 +178,7 @@ async def test_empty_allowlist_rejects_any_requested_recipient(
 async def test_no_recipient_and_no_default_raises_delivery_error_before_any_work(
     fake_redis: FakeRedis, fake_httpx: FakeHttpx, monkeypatch: pytest.MonkeyPatch
 ):
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     monkeypatch.delenv("CHANNEL_TWILIO_DEFAULT_RECIPIENT")
     reset_all_settings()
@@ -193,7 +193,7 @@ async def test_no_recipient_and_no_default_raises_delivery_error_before_any_work
 async def test_deliver_missing_from_number_raises_delivery_error_before_any_work(
     fake_redis: FakeRedis, fake_httpx: FakeHttpx, monkeypatch: pytest.MonkeyPatch
 ):
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     monkeypatch.delenv("CHANNEL_TWILIO_FROM")
     reset_all_settings()
@@ -209,7 +209,7 @@ async def test_deliver_missing_from_number_raises_delivery_error_before_any_work
 async def test_deliver_missing_account_sid_raises_delivery_error_and_releases_reservation(
     fake_redis: FakeRedis, fake_httpx: FakeHttpx, monkeypatch: pytest.MonkeyPatch
 ):
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     monkeypatch.delenv("CHANNEL_TWILIO_ACCOUNT_SID")
     reset_all_settings()
@@ -224,7 +224,7 @@ async def test_deliver_missing_account_sid_raises_delivery_error_and_releases_re
 async def test_deliver_missing_auth_token_raises_delivery_error_and_releases_reservation(
     fake_redis: FakeRedis, fake_httpx: FakeHttpx, monkeypatch: pytest.MonkeyPatch
 ):
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     monkeypatch.delenv("CHANNEL_TWILIO_AUTH_TOKEN")
     reset_all_settings()
@@ -321,7 +321,7 @@ async def test_notify_unlisted_recipient_rejected_and_nothing_sent(fake_redis: F
 async def test_notify_no_recipient_and_no_default_raises_delivery_error_before_any_work(
     fake_redis: FakeRedis, fake_httpx: FakeHttpx, monkeypatch: pytest.MonkeyPatch
 ):
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     monkeypatch.delenv("CHANNEL_TWILIO_DEFAULT_RECIPIENT")
     reset_all_settings()
@@ -336,7 +336,7 @@ async def test_notify_no_recipient_and_no_default_raises_delivery_error_before_a
 async def test_notify_missing_from_number_raises_delivery_error_before_any_work(
     fake_redis: FakeRedis, fake_httpx: FakeHttpx, monkeypatch: pytest.MonkeyPatch
 ):
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     monkeypatch.delenv("CHANNEL_TWILIO_FROM")
     reset_all_settings()
@@ -352,7 +352,7 @@ async def test_notify_missing_from_number_raises_delivery_error_before_any_work(
 async def test_notify_missing_auth_token_raises_delivery_error_and_nothing_sent(
     fake_redis: FakeRedis, fake_httpx: FakeHttpx, monkeypatch: pytest.MonkeyPatch
 ):
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     monkeypatch.delenv("CHANNEL_TWILIO_AUTH_TOKEN")
     reset_all_settings()

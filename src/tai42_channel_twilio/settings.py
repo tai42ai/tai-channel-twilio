@@ -1,7 +1,7 @@
 """Twilio channel settings.
 
 A ``TaiBaseSettings`` subclass reading the ``CHANNEL_TWILIO_`` env group, exposed
-through accessors cached by ``tai_kit.settings.settings_cache`` (so a live-reload
+through accessors cached by ``tai42_kit.settings.settings_cache`` (so a live-reload
 soft restart drops the singletons with every other settings group).
 
 Recipient policy is operator-owned deployment configuration:
@@ -20,9 +20,9 @@ from typing import Annotated
 
 from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import NoDecode, SettingsConfigDict
-from tai_contract.channels import ChannelDeliveryError
-from tai_kit.clients import RedisConnectionSettings
-from tai_kit.settings import TaiBaseSettings, settings_cache
+from tai42_contract.channels import ChannelDeliveryError
+from tai42_kit.clients import RedisConnectionSettings
+from tai42_kit.settings import TaiBaseSettings, settings_cache
 
 
 class TwilioSettings(TaiBaseSettings):

@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import pytest
 from pydantic import SecretStr, ValidationError
-from tai_contract.channels import ChannelDeliveryError
-from tai_kit.settings import reset_all_settings
+from tai42_contract.channels import ChannelDeliveryError
+from tai42_kit.settings import reset_all_settings
 
-from tai_channel_twilio.settings import (
+from tai42_channel_twilio.settings import (
     TwilioRedisSettings,
     TwilioSettings,
     require_delivery_secret,

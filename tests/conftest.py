@@ -1,8 +1,8 @@
 """Bind a light stub app before the plugin is imported.
 
-``tai_channel_twilio.register`` calls ``tai_app.channels.register`` and
-``tai_channel_twilio.inbound`` calls ``tai_app.http.custom_route`` at import time,
-and both send paths reach their clients via ``tai_app.clients.client_ctx``.
+``tai42_channel_twilio.register`` calls ``tai42_app.channels.register`` and
+``tai42_channel_twilio.inbound`` calls ``tai42_app.http.custom_route`` at import time,
+and both send paths reach their clients via ``tai42_app.clients.client_ctx``.
 Binding a stub app here — at collection time, before any test module imports the
 plugin — satisfies all three without standing up the real runtime.
 """
@@ -21,11 +21,11 @@ from urllib.parse import urlencode
 import httpx
 import pytest
 from starlette.requests import Request
-from tai_contract.app import tai_app
-from tai_contract.channels import ChannelDelivery
-from tai_kit.clients.impl.http import HttpxClient
-from tai_kit.clients.impl.redis import RedisClient
-from tai_kit.settings import reset_all_settings
+from tai42_contract.app import tai42_app
+from tai42_contract.channels import ChannelDelivery
+from tai42_kit.clients.impl.http import HttpxClient
+from tai42_kit.clients.impl.redis import RedisClient
+from tai42_kit.settings import reset_all_settings
 
 
 class _ClientCtx:
@@ -95,7 +95,7 @@ class _StubApp:
 
 
 _stub_app = _StubApp()
-tai_app.bind(_stub_app)
+tai42_app.bind(_stub_app)
 
 
 class FakeHttpx:

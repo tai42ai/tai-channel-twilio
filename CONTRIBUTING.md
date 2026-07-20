@@ -1,12 +1,12 @@
-# Contributing to tai-channel-twilio
+# Contributing to tai42-channel-twilio
 
-`tai-channel-twilio` is a Twilio SMS/WhatsApp **channel** plugin for the TAI
+`tai42-channel-twilio` is a Twilio SMS/WhatsApp **channel** plugin for the TAI
 ecosystem: `ask_user(..., channel="twilio")` delivers the question to a human's
 phone and bridges the reply back to the interaction's public callback door. It
-implements the `tai_contract.channels.Channel` protocol. The hard rule (the
-plugin rule): **it depends on `tai-contract` + `tai-kit` only and never imports
+implements the `tai42_contract.channels.Channel` protocol. The hard rule (the
+plugin rule): **it depends on `tai42-contract` + `tai42-kit` only and never imports
 the skeleton.** The skeleton loads it through the manifest's `channel_modules`
-field; `tai_channel_twilio.register` registers the `"twilio"` channel and its
+field; `tai42_channel_twilio.register` registers the `"twilio"` channel and its
 inbound route as a side-effect — there is no import edge to the skeleton in
 either direction.
 
@@ -15,7 +15,7 @@ either direction.
 - **No skeleton import — ever.** The package is contract-facing; the ban is
   enforced by ruff (`flake8-tidy-imports`), so a stray import fails lint:
   ```bash
-  grep -rn "tai_skeleton" src/   # must be empty
+  grep -rn "tai42_skeleton" src/   # must be empty
   ```
 - **Credentials are operator-bound, never LLM-visible.** The Twilio auth token
   and sender/recipient configuration come from the environment, never from a

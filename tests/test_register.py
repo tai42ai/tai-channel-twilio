@@ -8,19 +8,19 @@ import os
 import subprocess
 import sys
 
-from tai_contract.channels import Channel
+from tai42_contract.channels import Channel
 
-import tai_channel_twilio
-from tai_channel_twilio import TwilioChannel
+import tai42_channel_twilio
+from tai42_channel_twilio import TwilioChannel
 
 
 def test_importing_register_registers_channel_and_route(stub_app):
-    sys.modules.pop("tai_channel_twilio.register", None)
-    sys.modules.pop("tai_channel_twilio.inbound", None)
+    sys.modules.pop("tai42_channel_twilio.register", None)
+    sys.modules.pop("tai42_channel_twilio.inbound", None)
     stub_app.channels.registered.clear()
     stub_app.http.routes.clear()
 
-    importlib.import_module("tai_channel_twilio.register")
+    importlib.import_module("tai42_channel_twilio.register")
 
     assert list(stub_app.channels.registered) == ["twilio"]
     assert isinstance(stub_app.channels.registered["twilio"], TwilioChannel)
@@ -30,11 +30,11 @@ def test_importing_register_registers_channel_and_route(stub_app):
 
 
 def test_bare_package_import_does_not_register():
-    # `import tai_channel_twilio` (library use) must not touch the app handle;
+    # `import tai42_channel_twilio` (library use) must not touch the app handle;
     # only the register module carries the side-effect. Checked in a clean
     # subprocess (no stub app bound, no CHANNEL_TWILIO_* env) so the in-process
     # module cache cannot mask it.
-    code = "import sys; import tai_channel_twilio; assert 'tai_channel_twilio.register' not in sys.modules"
+    code = "import sys; import tai42_channel_twilio; assert 'tai42_channel_twilio.register' not in sys.modules"
     env = {key: value for key, value in os.environ.items() if not key.startswith("CHANNEL_TWILIO_")}
     subprocess.run([sys.executable, "-c", code], check=True, env=env)
 
@@ -44,6 +44,6 @@ def test_twilio_channel_satisfies_the_channel_protocol():
 
 
 def test_package_exports():
-    assert tai_channel_twilio.__all__ == ["TwilioChannel", "TwilioSettings", "twilio_settings"]
-    for name in tai_channel_twilio.__all__:
-        assert getattr(tai_channel_twilio, name) is not None
+    assert tai42_channel_twilio.__all__ == ["TwilioChannel", "TwilioSettings", "twilio_settings"]
+    for name in tai42_channel_twilio.__all__:
+        assert getattr(tai42_channel_twilio, name) is not None

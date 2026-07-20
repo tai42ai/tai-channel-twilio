@@ -9,9 +9,9 @@ import httpx
 import pytest
 from starlette.responses import Response
 
-import tai_channel_twilio.inbound  # noqa: F401  (route registration side-effect)
-from tai_channel_twilio.correlation import reserve_pending
-from tai_channel_twilio.inbound import AnswerForwardError
+import tai42_channel_twilio.inbound  # noqa: F401  (route registration side-effect)
+from tai42_channel_twilio.correlation import reserve_pending
+from tai42_channel_twilio.inbound import AnswerForwardError
 from tests.conftest import (
     FakeHttpx,
     FakeRedis,
@@ -176,7 +176,7 @@ async def test_wrong_digest_length_rejected(handler, fake_redis: FakeRedis, fake
 async def test_empty_auth_token_fails_closed_with_config_error(
     handler, fake_redis: FakeRedis, fake_httpx: FakeHttpx, monkeypatch: pytest.MonkeyPatch
 ):
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     await _seed_pending()
     monkeypatch.setenv("CHANNEL_TWILIO_AUTH_TOKEN", "")

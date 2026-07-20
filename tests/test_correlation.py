@@ -6,9 +6,9 @@ import math
 from datetime import UTC, datetime, timedelta
 
 import pytest
-from tai_contract.channels import ChannelDeliveryError
+from tai42_contract.channels import ChannelDeliveryError
 
-from tai_channel_twilio.correlation import (
+from tai42_channel_twilio.correlation import (
     PendingQuestion,
     PendingQuestionExistsError,
     already_seen,
@@ -135,7 +135,7 @@ async def test_seen_round_trip_uses_dedupe_ttl(fake_redis: FakeRedis):
 
 
 async def test_missing_redis_url_raises_on_every_store_function(fake_redis: FakeRedis, monkeypatch: pytest.MonkeyPatch):
-    from tai_kit.settings import reset_all_settings
+    from tai42_kit.settings import reset_all_settings
 
     monkeypatch.delenv("CHANNEL_TWILIO_REDIS_URL")
     reset_all_settings()

@@ -19,13 +19,13 @@ from typing import Any
 
 import httpx
 import pytest
-from tai_kit.clients.impl.http import HttpxClient
-from tai_kit.clients.impl.redis import RedisClient
-from tai_kit.settings import reset_all_settings
+from tai42_kit.clients.impl.http import HttpxClient
+from tai42_kit.clients.impl.redis import RedisClient
+from tai42_kit.settings import reset_all_settings
 
-from tai_channel_twilio import TwilioChannel
-from tai_channel_twilio.client import send_message
-from tai_channel_twilio.settings import twilio_settings
+from tai42_channel_twilio import TwilioChannel
+from tai42_channel_twilio.client import send_message
+from tai42_channel_twilio.settings import twilio_settings
 from tests.conftest import FakeRedis, make_delivery
 
 _ENV_KEYS = (
@@ -73,14 +73,14 @@ async def test_send_message_returns_a_message_sid():
     sid = await send_message(
         to=settings.default_recipient,
         from_number=settings.from_number,
-        body="tai-channel-twilio live smoke: send_message",
+        body="tai42-channel-twilio live smoke: send_message",
     )
 
     assert sid.startswith(("SM", "MM"))
 
 
 async def test_send_to_magic_invalid_number_raises_loudly():
-    from tai_contract.channels import ChannelDeliveryError
+    from tai42_contract.channels import ChannelDeliveryError
 
     settings = twilio_settings()
     assert settings.from_number is not None
@@ -92,7 +92,7 @@ async def test_send_to_magic_invalid_number_raises_loudly():
         await send_message(
             to="+15005550001",
             from_number=settings.from_number,
-            body="tai-channel-twilio live smoke: invalid recipient",
+            body="tai42-channel-twilio live smoke: invalid recipient",
         )
 
 
@@ -101,5 +101,5 @@ async def test_full_deliver_reaches_the_configured_human(monkeypatch: pytest.Mon
     reset_all_settings()
 
     await TwilioChannel().deliver(
-        make_delivery(question="tai-channel-twilio live smoke: full deliver — reply is not expected.")
+        make_delivery(question="tai42-channel-twilio live smoke: full deliver — reply is not expected.")
     )

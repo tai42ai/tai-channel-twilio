@@ -39,17 +39,17 @@ from urllib.parse import parse_qsl
 import httpx
 from starlette.requests import Request
 from starlette.responses import JSONResponse, PlainTextResponse, Response
-from tai_contract.app import tai_app
-from tai_kit.clients.impl.http import HttpxClient
+from tai42_contract.app import tai42_app
+from tai42_kit.clients.impl.http import HttpxClient
 
-from tai_channel_twilio.correlation import (
+from tai42_channel_twilio.correlation import (
     PendingQuestion,
     already_seen,
     mark_seen,
     pop_pending,
     restore_pending,
 )
-from tai_channel_twilio.settings import require_secret, twilio_settings
+from tai42_channel_twilio.settings import require_secret, twilio_settings
 
 logger = logging.getLogger(__name__)
 
@@ -143,11 +143,11 @@ async def _forward_answer(callback_url: str, answer: str) -> httpx.Response:
     the status policy (2xx answered, 404 terminal, 400 rejected-keep,
     anything else restore-and-raise).
     """
-    async with tai_app.clients.client_ctx(HttpxClient, timeout=twilio_settings().http_timeout_seconds) as client:
+    async with tai42_app.clients.client_ctx(HttpxClient, timeout=twilio_settings().http_timeout_seconds) as client:
         return await client.post(callback_url, json={"answer": answer})
 
 
-@tai_app.http.custom_route(
+@tai42_app.http.custom_route(
     "/api/channels/twilio/inbound",
     methods=["POST"],
     summary="Twilio inbound message webhook",

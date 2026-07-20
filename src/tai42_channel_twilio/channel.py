@@ -29,11 +29,11 @@ from __future__ import annotations
 import math
 from datetime import UTC, datetime
 
-from tai_contract.channels import ChannelDelivery, ChannelDeliveryError, ChannelNotification
+from tai42_contract.channels import ChannelDelivery, ChannelDeliveryError, ChannelNotification
 
-from tai_channel_twilio.client import send_message
-from tai_channel_twilio.correlation import release_pending, reserve_pending
-from tai_channel_twilio.settings import TwilioSettings, require_delivery_setting, twilio_settings
+from tai42_channel_twilio.client import send_message
+from tai42_channel_twilio.correlation import release_pending, reserve_pending
+from tai42_channel_twilio.settings import TwilioSettings, require_delivery_setting, twilio_settings
 
 # Tier-1 answer formats resolve via the callback link, not an SMS reply.
 _TIER1_FORMATS = frozenset({"confirm", "external"})
@@ -86,7 +86,7 @@ def _resolve_target(settings: TwilioSettings, requested: str | None) -> str:
 
 
 class TwilioChannel:
-    """Satisfies the ``tai_contract.channels.Channel`` protocol."""
+    """Satisfies the ``tai42_contract.channels.Channel`` protocol."""
 
     async def deliver(self, delivery: ChannelDelivery) -> None:
         """Resolve the destination "To" number, then push the question to it.

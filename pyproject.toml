@@ -3,7 +3,7 @@ requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tai-channel-twilio"
+name = "tai42-channel-twilio"
 version = "0.1.0"
 description = "Twilio SMS/WhatsApp channel plugin for the TAI ecosystem — delivers ask_user questions to a human's phone and bridges the reply back."
 readme = "README.md"
@@ -24,11 +24,11 @@ classifiers = [
 ]
 dependencies = [
     # The pure interface contract — Channel/ChannelDelivery/ChannelDeliveryError
-    # and the tai_app handle the plugin registers through.
-    "tai-contract>=0.1,<0.2",
+    # and the tai42_app handle the plugin registers through.
+    "tai42-contract>=0.1,<0.2",
     # HttpxClient (pooled outbound HTTP), RedisClient (correlation store),
     # TaiBaseSettings + the settings cache registry. [redis] pulls redis-py.
-    "tai-kit[redis]>=0.1,<0.2",
+    "tai42-kit[redis]>=0.1,<0.2",
     # Imported directly (transport error types + Basic-auth request building).
     "httpx>=0.28",
     # Imported directly by inbound.py (Request/Response handler types).
@@ -62,10 +62,10 @@ package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["tai_channel_twilio*"]
+include = ["tai42_channel_twilio*"]
 
 [tool.setuptools.package-data]
-tai_channel_twilio = ["py.typed", "tai-plugin.yml"]
+tai42_channel_twilio = ["py.typed", "tai-plugin.yml"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -81,7 +81,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["tai_channel_twilio"]
+source = ["tai42_channel_twilio"]
 
 [tool.coverage.report]
 fail_under = 97
@@ -89,6 +89,13 @@ fail_under = 97
 [tool.uv]
 cache-keys = [{ file = "pyproject.toml" }]
 
+
+# The version floors in [project] are the compatibility contract; these path
+# sources resolve the sibling checkouts while the packages are unpublished.
+# They are not part of wheel metadata.
+[tool.uv.sources]
+tai42-contract = { path = "../tai-contract", editable = true }
+tai42-kit = { path = "../tai-kit", editable = true }
 [tool.ruff]
 src = ["src"]
 target-version = "py313"
@@ -98,7 +105,7 @@ line-length = 120
 select = ["E", "W", "F", "I", "UP", "B", "C4", "SIM", "PIE", "PT", "RUF", "TID"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
-"tai_skeleton".msg = "A channel plugin sits below the skeleton: it never imports tai-skeleton."
+"tai42_skeleton".msg = "A channel plugin sits below the skeleton: it never imports tai42-skeleton."
 
 [tool.pyright]
 include = ["src", "tests"]

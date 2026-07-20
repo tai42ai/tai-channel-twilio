@@ -28,11 +28,11 @@ import math
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
-from tai_contract.app import tai_app
-from tai_contract.channels import ChannelDeliveryError
-from tai_kit.clients.impl.redis import RedisClient
+from tai42_contract.app import tai42_app
+from tai42_contract.channels import ChannelDeliveryError
+from tai42_kit.clients.impl.redis import RedisClient
 
-from tai_channel_twilio.settings import TwilioRedisSettings, twilio_redis_settings, twilio_settings
+from tai42_channel_twilio.settings import TwilioRedisSettings, twilio_redis_settings, twilio_settings
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ async def reserve_pending(twilio_number: str, human_number: str, callback_url: s
     """Atomically reserve the pair for one question, or raise ``PendingQuestionExistsError``."""
     value = json.dumps({"callback_url": callback_url, "timeout_at": timeout_at.isoformat()})
     ttl = _remaining_seconds(timeout_at)
-    async with tai_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
+    async with tai42_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
         stored = await redis.set(_pending_key(twilio_number, human_number), value, nx=True, ex=ttl)
     if not stored:
         raise PendingQuestionExistsError(
@@ -86,7 +86,7 @@ async def reserve_pending(twilio_number: str, human_number: str, callback_url: s
 
 async def release_pending(twilio_number: str, human_number: str) -> None:
     """Drop the reservation (the send failed — the human never received the question)."""
-    async with tai_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
+    async with tai42_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
         await redis.delete(_pending_key(twilio_number, human_number))
 
 
@@ -95,7 +95,7 @@ async def pop_pending(twilio_number: str, human_number: str) -> PendingQuestion 
 
     ``GETDEL`` guarantees a concurrent duplicate webhook delivery gets ``None``.
     """
-    async with tai_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
+    async with tai42_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
         raw = await redis.getdel(_pending_key(twilio_number, human_number))
     if raw is None:
         return None
@@ -121,7 +121,7 @@ async def restore_pending(twilio_number: str, human_number: str, question: Pendi
     if remaining <= 0:
         return
     value = json.dumps({"callback_url": question.callback_url, "timeout_at": question.timeout_at.isoformat()})
-    async with tai_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
+    async with tai42_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
         stored = await redis.set(_pending_key(twilio_number, human_number), value, nx=True, ex=remaining)
     if not stored:
         logger.error(
@@ -134,11 +134,11 @@ async def restore_pending(twilio_number: str, human_number: str, question: Pendi
 
 async def already_seen(message_sid: str) -> bool:
     """Whether this ``MessageSid`` was already handled (webhook retry or replay)."""
-    async with tai_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
+    async with tai42_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
         return bool(await redis.exists(_seen_key(message_sid)))
 
 
 async def mark_seen(message_sid: str) -> None:
     """Remember a handled ``MessageSid`` for the configured dedupe window."""
-    async with tai_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
+    async with tai42_app.clients.client_ctx(RedisClient, _redis_settings()) as redis:
         await redis.set(_seen_key(message_sid), "1", ex=twilio_settings().dedupe_ttl)

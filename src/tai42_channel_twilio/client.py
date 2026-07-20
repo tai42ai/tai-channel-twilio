@@ -14,11 +14,11 @@ risks texting the human twice. Any failure raises ``ChannelDeliveryError`` loudl
 from __future__ import annotations
 
 import httpx
-from tai_contract.app import tai_app
-from tai_contract.channels import ChannelDeliveryError
-from tai_kit.clients.impl.http import HttpxClient
+from tai42_contract.app import tai42_app
+from tai42_contract.channels import ChannelDeliveryError
+from tai42_kit.clients.impl.http import HttpxClient
 
-from tai_channel_twilio.settings import require_delivery_secret, require_delivery_setting, twilio_settings
+from tai42_channel_twilio.settings import require_delivery_secret, require_delivery_setting, twilio_settings
 
 
 async def send_message(to: str, from_number: str, body: str) -> str:
@@ -35,7 +35,7 @@ async def send_message(to: str, from_number: str, body: str) -> str:
     url = f"{settings.api_base_url}/Accounts/{account_sid}/Messages.json"
     form = {"To": to, "From": from_number, "Body": body}
     try:
-        async with tai_app.clients.client_ctx(HttpxClient, timeout=settings.http_timeout_seconds) as client:
+        async with tai42_app.clients.client_ctx(HttpxClient, timeout=settings.http_timeout_seconds) as client:
             response = await client.post(url, data=form, auth=(account_sid, auth_token))
     except httpx.HTTPError as exc:
         raise ChannelDeliveryError(f"Twilio send failed in transport: {exc!r}") from exc
