@@ -1,0 +1,21 @@
+spec_version: 1
+namespace: tai42
+name: channel-twilio
+package: tai-channel-twilio
+version: 0.1.0
+description: "Twilio SMS/WhatsApp channel plugin for the TAI ecosystem — delivers ask_user questions to a human's phone and bridges the reply back."
+license: Apache-2.0
+homepage: https://tai42.ai
+repository: https://github.com/tai42ai/tai-channel-twilio
+contract: ">=0.1,<0.2"
+categories: [channels]
+tags: [channel, twilio, sms, whatsapp, ask-user, hitl]
+permissions:
+  network: true
+  subprocess: false
+  filesystem: false
+provides:
+  - kind: channel
+    name: twilio
+    module: tai_channel_twilio.register
+    description: "Deliver ask_user questions to a phone over Twilio SMS/WhatsApp and bridge the reply back."

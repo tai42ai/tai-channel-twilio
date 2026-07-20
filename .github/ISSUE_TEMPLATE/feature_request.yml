@@ -1,0 +1,19 @@
+name: Feature request
+description: Propose an addition or change to tai-channel-twilio
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What should be added or changed, and what problem does it solve? Remember the plugin rule — tai-channel-twilio depends on tai-contract + tai-kit only and never imports the skeleton.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: tai-channel-twilio version
+      description: The version you are using, if relevant.
+      placeholder: "0.1.0"
+    validations:
+      required: false
