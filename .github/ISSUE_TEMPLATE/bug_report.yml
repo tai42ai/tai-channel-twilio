@@ -1,0 +1,34 @@
+name: Bug report
+description: Report a defect in tai42-channel-twilio (the Twilio SMS/WhatsApp channel plugin)
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Minimal steps or code that reproduce the problem.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: tai42-channel-twilio version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Python version, the host tai42-skeleton version, and the Twilio channel used (SMS or WhatsApp).
+      placeholder: "Python 3.13.x, macOS 15"
+    validations:
+      required: true
