@@ -2,7 +2,7 @@ spec_version: 1
 namespace: tai42
 name: channel-twilio
 package: tai42-channel-twilio
-version: 0.2.0 # x-release-please-version
+version: 0.2.0
 description: "Twilio SMS/WhatsApp channel plugin for the TAI ecosystem — delivers ask_user questions to a human's phone and bridges the reply back."
 license: Apache-2.0
 homepage: https://tai42.ai
