@@ -5,7 +5,11 @@
   "packages": {
     ".": {
       "skip-changelog": true,
-      "package-name": "tai42-channel-twilio"
+      "package-name": "tai42-channel-twilio",
+      "extra-files": [
+        "tai-plugin.yml",
+        "src/tai42_channel_twilio/tai-plugin.yml"
+      ]
     }
   }
 }
