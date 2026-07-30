@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tai42-channel-twilio"
-version = "0.2.0"
+version = "0.2.1"
 description = "Twilio SMS/WhatsApp channel plugin for the TAI ecosystem — delivers ask_user questions to a human's phone and bridges the reply back."
 readme = "README.md"
 requires-python = ">=3.13"
