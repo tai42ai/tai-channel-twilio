@@ -15,23 +15,13 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tai-channel-twilio
+    # Published resolution: UV_NO_SOURCES ignores the [tool.uv.sources] editable
+    # paths so the committed uv.lock resolves released siblings from PyPI. CI is
+    # hermetic — no sibling checkouts. Local dev keeps sources (plain `uv sync`).
+    env:
+      UV_NO_SOURCES: "1"
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
-        with:
-          path: tai-channel-twilio
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
-        with:
-          repository: ${{ github.repository_owner }}/tai-contract
-          path: tai-contract
-          token: ${{ secrets.TAI_CI_TOKEN }}
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
-        with:
-          repository: ${{ github.repository_owner }}/tai-kit
-          path: tai-kit
-          token: ${{ secrets.TAI_CI_TOKEN }}
       - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
         with:
           version: "0.11.26"
